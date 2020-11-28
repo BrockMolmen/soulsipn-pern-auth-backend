@@ -37,10 +37,10 @@ const update = (req, res) => {
         where: {
             id: req.params.id
         }
+    }).then((updatedUser) => {
+        res.json({user: updatedUser})
     })
-        .then(function (results) {
-            res.redirect('/profile')
-        }).catch(function (err) { })
+    .catch(err => console.log("Error at user#update", err))
 }
 
 
