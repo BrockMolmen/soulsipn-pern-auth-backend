@@ -1,14 +1,15 @@
 const db = require('../models')
 
 const login = (req, res) => {
+  console.log("heeeeeeey")
   res.json({ user: req.user.id })
 }
 
 const register = (req, res) => {
-  const { name, email, password } = req.body
+  const { firstName, lastName, email, password } = req.body
   
   // validate the POSTed data - making sure we have a name, an email, a pw
-  if (!name || !email || !password) {
+  if (!firstName || !lastName || !email || !password) {
     return res.json({ message: 'Please enter a name, an email, and a password' })
   }
 
@@ -21,15 +22,49 @@ const register = (req, res) => {
 
       // if the user doesnt exist, create and save a user to the DB
       db.user.create({
-        name,
-        email,
-        password
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: req.body.password
       }).then(newUser => {
         console.log('New user created!')
         res.json(newUser)
       })
     })
 }
+
+const findUser = (req, res) => {
+  db.user.findOne({
+    where: {
+      id: req.user.id
+    }
+  })
+  .then(foundUser => {
+    res.json(foundUser)
+  })
+}
+
+
+
+const updateUser = (req, res) => {
+  const { firstName, lastName, email } = req.body
+
+  db.user.update({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+  }, {
+      where: {
+          id: req.user.id
+      }
+  })
+  .then(function (results) {
+      res.redirect('/profile')
+  }).catch(function(err){})
+}
+
+
+
 
 const logout = (req, res) => {
   if (!req.user) {
@@ -42,5 +77,7 @@ const logout = (req, res) => {
 module.exports = {
   login,
   register,
-  logout
+  logout,
+  updateUser,
+  findUser
 }
