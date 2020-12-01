@@ -28,7 +28,6 @@ const show = (req, res) => {
 
 
 const update = (req, res) => {
-
     db.user.update({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
